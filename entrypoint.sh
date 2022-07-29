@@ -20,6 +20,10 @@ SHA=${INPUT_COMMIT_SHA:-${GITHUB_SHA}}
 git config user.name "${GITHUB_ACTOR}"
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
+echo "GITHUB_SHA=${GITHUB_SHA}"
+echo "INPUT_COMMIT_SHA=${INPUT_COMMIT_SHA}"
+echo "SHA=${SHA}"
+
 # Create tag
 echo "[action-create-tag] Create tag '${TAG}'."
 if [ "${FORCE_TAG}" = 'true' ]; then
