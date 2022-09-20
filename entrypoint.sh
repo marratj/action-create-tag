@@ -21,6 +21,11 @@ INCLUDE_SUBMODULES="${INPUT_INCLUDE_SUBMODULES:-false}"
 git config user.name "${GITHUB_ACTOR}"
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
+if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+  git submodule foreach git config user.name "${GITHUB_ACTOR}"
+  git submodule foreach git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+fi
+
 echo "GITHUB_SHA=${GITHUB_SHA}"
 echo "INPUT_COMMIT_SHA=${INPUT_COMMIT_SHA}"
 echo "SHA=${SHA}"
