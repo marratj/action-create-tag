@@ -16,6 +16,7 @@ TAG="${INPUT_TAG}"
 MESSAGE="${INPUT_MESSAGE:-Release ${TAG}}"
 FORCE_TAG="${INPUT_FORCE_PUSH_TAG:-false}"
 SHA=${INPUT_COMMIT_SHA:-${GITHUB_SHA}}
+INCLUDE_SUBMODULES="${INPUT_INCLUDE_SUBMODULES:-false}"
 
 git config user.name "${GITHUB_ACTOR}"
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
@@ -28,8 +29,10 @@ echo "SHA=${SHA}"
 echo "[action-create-tag] Create tag '${TAG}'."
 if [ "${FORCE_TAG}" = 'true' ]; then
   git tag -fa "${TAG}" "${SHA}" -m "${MESSAGE}"
+  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git tag -fa "${TAG}" -m "${MESSAGE}"
 else
   git tag -a "${TAG}" "${SHA}" -m "${MESSAGE}"
+  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git tag -a "${TAG}" -m "${MESSAGE}"
 fi
 
 # Set up remote url for checkout@v1 action.
@@ -41,7 +44,9 @@ fi
 if [ "${FORCE_TAG}" = 'true' ]; then
   echo "[action-create-tag] Force push tag '${TAG}'."
   git push --force origin "${TAG}"
+  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git push "${TAG}" --force
 else
   echo "[action-create-tag] Push tag '${TAG}'."
   git push origin "${TAG}"
+  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git push "${TAG}"
 fi

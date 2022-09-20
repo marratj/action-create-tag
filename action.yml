@@ -18,6 +18,10 @@ inputs:
     description: "Optional. Force push the tag. Defaults to 'false'."
     required: false
     default: "false"
+  include_submodules:
+    description: "Optional. Creates the same tag in all submodules with their checked out commit SHA. Defaults to 'false'."
+    required: false
+    default: "false"
 runs:
   using: "docker"
   image: "Dockerfile"
