@@ -60,6 +60,7 @@ else
   echo "[action-create-tag] Push tag '${TAG}'."
   git push origin "${TAG}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+    git submodule foreach git tag -l
     git submodule foreach git push "${TAG}"
   fi
 fi
