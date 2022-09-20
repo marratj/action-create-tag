@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu
+set -eux
 
 # Apply hotfix for 'fatal: unsafe repository' error (see #10)
 git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -54,13 +54,12 @@ if [ "${FORCE_TAG}" = 'true' ]; then
   echo "[action-create-tag] Force push tag '${TAG}'."
   git push --force origin "${TAG}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git push "${TAG}" --force
+    git submodule foreach git push origin "${TAG}" --force
   fi
 else
   echo "[action-create-tag] Push tag '${TAG}'."
   git push origin "${TAG}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git tag -l
-    git submodule foreach git push "${TAG}"
+    git submodule foreach git push origin "${TAG}"
   fi
 fi
