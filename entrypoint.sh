@@ -29,10 +29,14 @@ echo "SHA=${SHA}"
 echo "[action-create-tag] Create tag '${TAG}'."
 if [ "${FORCE_TAG}" = 'true' ]; then
   git tag -fa "${TAG}" "${SHA}" -m "${MESSAGE}"
-  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git tag -fa "${TAG}" -m "${MESSAGE}"
+  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+    git submodule foreach git tag -fa "${TAG}" -m "${MESSAGE}"
+  fi
 else
   git tag -a "${TAG}" "${SHA}" -m "${MESSAGE}"
-  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git tag -a "${TAG}" -m "${MESSAGE}"
+  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+    git submodule foreach git tag -a "${TAG}" -m "${MESSAGE}"
+  fi
 fi
 
 # Set up remote url for checkout@v1 action.
@@ -44,9 +48,13 @@ fi
 if [ "${FORCE_TAG}" = 'true' ]; then
   echo "[action-create-tag] Force push tag '${TAG}'."
   git push --force origin "${TAG}"
-  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git push "${TAG}" --force
+  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+    git submodule foreach git push "${TAG}" --force
+  fi
 else
   echo "[action-create-tag] Push tag '${TAG}'."
   git push origin "${TAG}"
-  [[ "${INCLUDE_SUBMODULES}" = 'true' ]] && git submodule foreach git push "${TAG}"
+  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
+    git submodule foreach git push "${TAG}"
+  fi
 fi
