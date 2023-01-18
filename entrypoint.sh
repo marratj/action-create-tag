@@ -17,6 +17,7 @@ MESSAGE="${INPUT_MESSAGE:-Release ${TAG}}"
 FORCE_TAG="${INPUT_FORCE_PUSH_TAG:-false}"
 SHA=${INPUT_COMMIT_SHA:-${GITHUB_SHA}}
 INCLUDE_SUBMODULES="${INPUT_INCLUDE_SUBMODULES:-false}"
+ONLY_SUBMODULE="${INPUT_ONLY_SUBMODULE:-}"
 
 git config user.name "${GITHUB_ACTOR}"
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
@@ -30,17 +31,23 @@ echo "GITHUB_SHA=${GITHUB_SHA}"
 echo "INPUT_COMMIT_SHA=${INPUT_COMMIT_SHA}"
 echo "SHA=${SHA}"
 
+FORCE_SWITCH=""
+if [ "${FORCE_TAG}" = 'true' ]; then
+  FORCE_SWITCH="--force"
+fi
+echo "FORCE_SWITCH=${FORCE_SWITCH}"
+
 # Create tag
 echo "[action-create-tag] Create tag '${TAG}'."
-if [ "${FORCE_TAG}" = 'true' ]; then
-  git tag -fa "${TAG}" "${SHA}" -m "${MESSAGE}"
-  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git tag -fa "${TAG}" -m "${MESSAGE}"
-  fi
+
+if [ -n "${ONLY_SUBMODULE}"]; then
+  pushd ${ONLY_SUBMODULE}
+  git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
+  popd
 else
-  git tag -a "${TAG}" "${SHA}" -m "${MESSAGE}"
+  git tag ${FORCE_SWITCH} -a "${TAG}" "${SHA}" -m "${MESSAGE}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git tag -a "${TAG}" -m "${MESSAGE}"
+    git submodule foreach git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
   fi
 fi
 
@@ -50,16 +57,15 @@ if [ -n "${INPUT_GITHUB_TOKEN}" ]; then
 fi
 
 # Push tag
-if [ "${FORCE_TAG}" = 'true' ]; then
-  echo "[action-create-tag] Force push tag '${TAG}'."
-  git push --force origin "${TAG}"
-  if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git push origin "${TAG}" --force
-  fi
+echo "[action-create-tag] Push tag '${TAG}'."
+
+if [ -n "${ONLY_SUBMODULE}"]; then
+  pushd ${ONLY_SUBMODULE}
+  git push origin "${TAG}" ${FORCE_SWITCH}
+  popd
 else
-  echo "[action-create-tag] Push tag '${TAG}'."
-  git push origin "${TAG}"
+  git push ${FORCE_SWITCH} origin "${TAG}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
-    git submodule foreach git push origin "${TAG}"
+    git submodule foreach git push origin "${TAG}" ${FORCE_SWITCH}
   fi
 fi

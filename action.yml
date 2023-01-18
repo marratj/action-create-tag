@@ -22,6 +22,10 @@ inputs:
     description: "Optional. Creates the same tag in all submodules with their checked out commit SHA. Defaults to 'false'."
     required: false
     default: "false"
+  only_submodule:
+    description: "Optional. Create the tag only in the specified submodule. Defaults to empty."
+    required: false
+    default: ""
 runs:
   using: "docker"
   image: "Dockerfile"
