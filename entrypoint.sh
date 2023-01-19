@@ -40,7 +40,7 @@ echo "FORCE_SWITCH=${FORCE_SWITCH}"
 # Create tag
 echo "[action-create-tag] Create tag '${TAG}'."
 
-if [ -n "${ONLY_SUBMODULE}"]; then
+if [ -n "${ONLY_SUBMODULE}" ]; then
   pushd ${ONLY_SUBMODULE}
   git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
   popd
@@ -59,7 +59,7 @@ fi
 # Push tag
 echo "[action-create-tag] Push tag '${TAG}'."
 
-if [ -n "${ONLY_SUBMODULE}"]; then
+if [ -n "${ONLY_SUBMODULE}" ]; then
   pushd ${ONLY_SUBMODULE}
   git push origin "${TAG}" ${FORCE_SWITCH}
   popd
