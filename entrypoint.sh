@@ -41,6 +41,7 @@ echo "FORCE_SWITCH=${FORCE_SWITCH}"
 echo "[action-create-tag] Create tag '${TAG}'."
 
 if [ -n "${ONLY_SUBMODULE}" ]; then
+  git config --global --add safe.directory /github/workspace/${ONLY_SUBMODULE}
   pushd ${ONLY_SUBMODULE}
   git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
   popd
