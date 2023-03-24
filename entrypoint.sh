@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 # Apply hotfix for 'fatal: unsafe repository' error (see #10)
 git config --global --add safe.directory "${GITHUB_WORKSPACE}"
