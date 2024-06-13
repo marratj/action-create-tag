@@ -1,6 +1,6 @@
-FROM alpine:3.17
+FROM alpine:3.19
 
-RUN apk --no-cache add git openssh-client bash && \
+RUN apk --no-cache add git git-lfs openssh-client bash && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh
