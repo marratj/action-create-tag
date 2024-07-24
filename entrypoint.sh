@@ -43,12 +43,12 @@ if [ -n "${ONLY_SUBMODULE}" ]; then
   git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
   popd
 else
-  git tag ${FORCE_SWITCH} -a "${TAG}" "${SHA}" -m "${MESSAGE}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
     git submodule foreach git config user.name "${GITHUB_ACTOR}"
     git submodule foreach git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
     git submodule foreach git tag ${FORCE_SWITCH} -a "${TAG}" -m "${MESSAGE}"
   fi
+  git tag ${FORCE_SWITCH} -a "${TAG}" "${SHA}" -m "${MESSAGE}"
 fi
 
 # Set up remote url for checkout@v1 action.
@@ -64,8 +64,8 @@ if [ -n "${ONLY_SUBMODULE}" ]; then
   git push origin "${TAG}" ${FORCE_SWITCH}
   popd
 else
-  git push ${FORCE_SWITCH} origin "${TAG}"
   if [ "${INCLUDE_SUBMODULES}" = 'true' ]; then
     git submodule foreach git push origin "${TAG}" ${FORCE_SWITCH}
   fi
+  git push ${FORCE_SWITCH} origin "${TAG}"
 fi
